@@ -5,14 +5,14 @@ MVP de plataforma web para eventos underground, alternativos, culturales e indep
 ## Stack
 
 - **Frontend:** Next.js (App Router), TypeScript, TailwindCSS
-- **Backend:** API Routes Next.js, Prisma ORM, PostgreSQL
+- **Backend:** API Routes Next.js, Prisma ORM, SQLite (modo local)
 - **Auth:** NextAuth con credenciales (email/contraseña)
 - **Validación:** Zod
 
 ## Requisitos
 
 - Node.js 18+
-- PostgreSQL
+- SQLite (archivo local)
 - npm
 
 ## Instalación y ejecución local
@@ -34,7 +34,7 @@ MVP de plataforma web para eventos underground, alternativos, culturales e indep
 
    Edita `.env`:
 
-   - `DATABASE_URL`: conexión a PostgreSQL (ej. `postgresql://usuario:password@localhost:5432/underground`)
+   - `DATABASE_URL`: ruta a SQLite (ej. `file:./dev.db`)
    - `NEXTAUTH_SECRET`: secreto para sesiones (generar con `openssl rand -base64 32`)
    - `NEXTAUTH_URL`: URL de la app (en local: `http://localhost:3000`)
 
