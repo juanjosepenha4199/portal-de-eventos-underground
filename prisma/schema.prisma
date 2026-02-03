@@ -1,0 +1,69 @@
+// Prisma schema - Underground Portal de Eventos
+// Base de datos: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER      // asistente
+  ORGANIZER // publica eventos
+  ADMIN     // gestiona contenido
+}
+
+enum EventStatus {
+  ACTIVE
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organizedEvents Event[]
+  favorites       Favorite[]
+}
+
+model Event {
+  id          String      @id @default(cuid())
+  title       String
+  description String
+  category    String      // música, arte, cultura, etc.
+  dateTime    DateTime
+  location    String
+  image       String?     // URL de imagen
+  status      EventStatus @default(ACTIVE)
+  organizerId String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  organizer User     @relation(fields: [organizerId], references: [id], onDelete: Restrict)
+  favorites Favorite[]
+
+  @@index([status, dateTime])
+  @@index([category])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  eventId   String
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+  @@index([userId])
+  @@index([eventId])
+}
