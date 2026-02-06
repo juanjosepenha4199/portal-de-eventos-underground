@@ -1,14 +1,25 @@
+"use client";
+
 import Link from "next/link";
 import type { Event } from "@prisma/client";
+import { useTranslation } from "@/lib/i18n/context";
 
 type EventWithOrganizer = Event & { organizer?: { name: string | null } };
 
 interface EventCardProps {
   event: EventWithOrganizer;
   showOrganizer?: boolean;
+  variant?: "grid" | "list";
 }
 
-function formatDate(d: Date) {
+function formatDateBadge(d: Date) {
+  return new Date(d).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  }).toUpperCase();
+}
+
+function formatDateFull(d: Date) {
   return new Date(d).toLocaleDateString("es-ES", {
     weekday: "short",
     day: "numeric",
@@ -19,16 +30,60 @@ function formatDate(d: Date) {
   });
 }
 
-export function EventCard({ event, showOrganizer }: EventCardProps) {
+function truncate(str: string, max: number) {
+  if (str.length <= max) return str;
+  return str.slice(0, max).trim() + "…";
+}
+
+export function EventCard({ event, showOrganizer, variant = "grid" }: EventCardProps) {
+  const { t } = useTranslation();
   const href = `/events/${event.id}`;
   const hasImage = event.image && event.image.trim().length > 0;
+  const descriptionSnippet = truncate(event.description, 80);
+  const priceLabel = event.price?.trim() || t("card.viewEvent");
+
+  if (variant === "list") {
+    return (
+      <Link
+        href={href}
+        className="flex gap-4 rounded-xl border border-underground-border bg-underground-card overflow-hidden hover:border-underground-accent/50 transition p-0 sm:flex-row flex-col"
+      >
+        <div className="relative w-full sm:w-48 h-40 sm:h-32 flex-shrink-0 bg-underground-border">
+          {hasImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={event.image!}
+              alt={event.title}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <span className="absolute inset-0 flex items-center justify-center text-underground-muted text-sm">Sin imagen</span>
+          )}
+          <span className="absolute top-2 left-2 bg-black/80 text-white text-xs font-medium px-2 py-1 rounded">
+            {formatDateBadge(event.dateTime)}
+          </span>
+        </div>
+        <div className="flex-1 min-w-0 p-4 flex flex-col justify-center">
+          <h3 className="font-semibold text-underground-fg truncate">{event.title}</h3>
+          <p className="text-underground-muted text-sm mt-1 line-clamp-2">{descriptionSnippet}</p>
+          <p className="text-zinc-400 text-sm mt-2 flex items-center gap-1">
+            <span aria-hidden>📍</span> {event.location}
+          </p>
+          {showOrganizer && event.organizer?.name && (
+            <p className="text-underground-accent/80 text-xs mt-1">{event.organizer.name}</p>
+          )}
+          <p className="text-underground-accent font-medium text-sm mt-2">{priceLabel}</p>
+        </div>
+      </Link>
+    );
+  }
 
   return (
     <Link
       href={href}
-      className="block rounded-lg border border-underground-border bg-underground-card overflow-hidden hover:border-underground-accent/50 transition"
+      className="block rounded-xl border border-underground-border bg-underground-card overflow-hidden hover:border-underground-accent/50 transition"
     >
-      <div className="aspect-video bg-underground-border relative flex items-center justify-center">
+      <div className="aspect-[4/3] bg-underground-border relative flex items-center justify-center">
         {hasImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -37,21 +92,27 @@ export function EventCard({ event, showOrganizer }: EventCardProps) {
             className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
-          <span className="text-underground-muted text-sm">Sin imagen</span>
+          <span className="text-underground-muted text-sm">{t("card.noImage")}</span>
         )}
+        <span className="absolute top-2 left-2 bg-black/90 text-white text-xs font-medium px-2 py-1 rounded">
+          {formatDateBadge(event.dateTime)}
+        </span>
         {event.status === "CANCELLED" && (
           <span className="absolute top-2 right-2 bg-underground-danger text-white text-xs px-2 py-1 rounded">
-            Cancelado
+            {t("card.cancelled")}
           </span>
         )}
       </div>
       <div className="p-4">
-        <h3 className="font-semibold text-white truncate">{event.title}</h3>
-        <p className="text-underground-muted text-sm mt-1">{formatDate(event.dateTime)}</p>
-        <p className="text-zinc-400 text-sm mt-1 truncate">{event.location}</p>
+        <h3 className="font-semibold text-underground-fg truncate">{event.title}</h3>
+        <p className="text-underground-muted text-sm mt-1 line-clamp-2">{descriptionSnippet}</p>
+        <p className="text-zinc-400 text-sm mt-2 flex items-center gap-1 truncate">
+          <span aria-hidden>📍</span> {event.location}
+        </p>
         {showOrganizer && event.organizer?.name && (
-          <p className="text-underground-accent/80 text-xs mt-2">{event.organizer.name}</p>
+          <p className="text-underground-accent/80 text-xs mt-1">{event.organizer.name}</p>
         )}
+        <p className="text-underground-accent font-medium text-sm mt-2">{priceLabel}</p>
       </div>
     </Link>
   );

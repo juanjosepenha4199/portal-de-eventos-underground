@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { EventForm } from "@/components/EventForm";
+import { PageTitle } from "@/components/PageTitle";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +14,7 @@ export default async function NewEventPage() {
 
   return (
     <div className="max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold text-white mb-6">Crear evento</h1>
+      <PageTitle translationKey="events.new" />
       <EventForm />
     </div>
   );

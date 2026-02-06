@@ -10,12 +10,13 @@ const config: Config = {
     extend: {
       colors: {
         underground: {
-          bg: "#0a0a0b",
-          card: "#141416",
-          border: "#27272a",
-          muted: "#71717a",
-          accent: "#a78bfa",
-          danger: "#ef4444",
+          bg: "var(--underground-bg)",
+          card: "var(--underground-card)",
+          border: "var(--underground-border)",
+          muted: "var(--underground-muted)",
+          accent: "var(--underground-accent)",
+          danger: "var(--underground-danger)",
+          fg: "var(--underground-fg)",
         },
       },
       fontFamily: {

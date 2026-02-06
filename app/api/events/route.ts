@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   const to = searchParams.get("to");
 
   const where: Prisma.EventWhereInput = { status: "ACTIVE" };
-  if (category) where.category = { equals: category, mode: "insensitive" };
+  if (category) where.category = category;
   if (from || to) {
     where.dateTime = {};
     if (from) (where.dateTime as { gte?: Date }).gte = new Date(from);
@@ -54,6 +54,7 @@ export async function POST(request: Request) {
       ...parsed.data,
       dateTime: new Date(parsed.data.dateTime),
       image: parsed.data.image || null,
+      price: parsed.data.price?.trim() || null,
       organizerId: session.user.id,
     };
 

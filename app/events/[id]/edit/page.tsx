@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { EventForm } from "@/components/EventForm";
+import { PageTitle } from "@/components/PageTitle";
 
 export const dynamic = "force-dynamic";
 
@@ -31,12 +32,13 @@ export default async function EditEventPage({
     dateTime: dateTimeLocal,
     location: event.location,
     image: event.image ?? "",
+    price: event.price ?? "",
     status: event.status,
   };
 
   return (
     <div className="max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold text-white mb-6">Editar evento</h1>
+      <PageTitle translationKey="events.edit" />
       <EventForm eventId={id} initial={initial} />
     </div>
   );

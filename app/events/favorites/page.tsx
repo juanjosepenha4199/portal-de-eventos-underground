@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { EventCard } from "@/components/EventCard";
+import { EventsPageEmpty } from "@/components/EventsPageEmpty";
+import { PageTitle } from "@/components/PageTitle";
 
 export const dynamic = "force-dynamic";
 
@@ -22,9 +24,9 @@ export default async function FavoritesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">Mis eventos guardados</h1>
+      <PageTitle translationKey="events.favorites" />
       {events.length === 0 ? (
-        <p className="text-underground-muted py-8">No tienes eventos guardados.</p>
+        <EventsPageEmpty messageKey="events.favoritesEmpty" />
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (

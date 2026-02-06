@@ -1,21 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import type { Event, User } from "@prisma/client";
+import type { Event } from "@prisma/client";
+import { useTranslation } from "@/lib/i18n/context";
 
 type EventWithOrganizer = Event & {
   organizer: { name: string | null; email: string } | null;
 };
 
 export function AdminEvents({ events }: { events: EventWithOrganizer[] }) {
+  const { t } = useTranslation();
+
   async function deleteEvent(id: string) {
-    if (!confirm("¿Eliminar este evento?")) return;
+    if (!confirm(t("event.deleteConfirm"))) return;
     const res = await fetch(`/api/events/${id}`, { method: "DELETE" });
     if (res.ok) {
       window.location.reload();
     } else {
       const data = await res.json().catch(() => ({}));
-      alert(data.error ?? "Error al eliminar");
+      alert(data.error ?? t("event.deleteError"));
     }
   }
 
@@ -23,17 +26,17 @@ export function AdminEvents({ events }: { events: EventWithOrganizer[] }) {
     <div className="rounded-lg border border-underground-border bg-underground-card overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
-          <thead className="bg-underground-bg text-zinc-400">
+          <thead className="bg-underground-bg text-underground-muted">
             <tr>
-              <th className="px-4 py-3">Título</th>
-              <th className="px-4 py-3">Categoría</th>
-              <th className="px-4 py-3">Fecha</th>
-              <th className="px-4 py-3">Estado</th>
-              <th className="px-4 py-3">Organizador</th>
-              <th className="px-4 py-3">Acciones</th>
+              <th className="px-4 py-3">{t("form.title")}</th>
+              <th className="px-4 py-3">{t("form.category")}</th>
+              <th className="px-4 py-3">{t("admin.date")}</th>
+              <th className="px-4 py-3">{t("form.status")}</th>
+              <th className="px-4 py-3">{t("event.organizer")}</th>
+              <th className="px-4 py-3">{t("admin.actions")}</th>
             </tr>
           </thead>
-          <tbody className="text-white divide-y divide-underground-border">
+          <tbody className="text-underground-fg divide-y divide-underground-border">
             {events.map((e) => (
               <tr key={e.id}>
                 <td className="px-4 py-3">
@@ -71,7 +74,7 @@ export function AdminEvents({ events }: { events: EventWithOrganizer[] }) {
         </table>
       </div>
       {events.length === 0 && (
-        <p className="px-4 py-6 text-underground-muted text-center">No hay eventos.</p>
+        <p className="px-4 py-6 text-underground-muted text-center">{t("admin.noEvents")}</p>
       )}
     </div>
   );

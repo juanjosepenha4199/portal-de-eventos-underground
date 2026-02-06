@@ -3,7 +3,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { AdminEvents } from "@/components/AdminEvents";
+import { AdminSectionTitle } from "@/components/AdminSectionTitle";
 import { AdminUsers } from "@/components/AdminUsers";
+import { PageTitle } from "@/components/PageTitle";
 
 export const dynamic = "force-dynamic";
 
@@ -23,15 +25,15 @@ export default async function AdminPage() {
 
   return (
     <div className="space-y-10">
-      <h1 className="text-2xl font-bold text-white">Panel de administración</h1>
+      <PageTitle translationKey="admin.panelTitle" />
 
       <section>
-        <h2 className="text-xl font-semibold text-white mb-4">Usuarios registrados</h2>
+        <AdminSectionTitle translationKey="admin.users" />
         <AdminUsers users={users} />
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold text-white mb-4">Todos los eventos</h2>
+        <AdminSectionTitle translationKey="admin.events" />
         <AdminEvents events={events} />
       </section>
     </div>

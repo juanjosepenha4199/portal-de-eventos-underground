@@ -42,6 +42,7 @@ model Event {
   dateTime    DateTime
   location    String
   image       String?     // URL de imagen
+  price       String?     // ej. "FREE", "€25.00"
   status      EventStatus @default(ACTIVE)
   organizerId String
   createdAt   DateTime    @default(now())

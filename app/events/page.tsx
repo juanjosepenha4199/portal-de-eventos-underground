@@ -1,11 +1,12 @@
 import type { Prisma } from "@prisma/client";
-import Link from "next/link";
 import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { EventCard } from "@/components/EventCard";
 import { EventFilters } from "@/components/EventFilters";
+import { EventsPageEmpty } from "@/components/EventsPageEmpty";
+import { EventsPageHeader } from "@/components/EventsPageHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,7 @@ export default async function EventsPage({
   const session = await getServerSession(authOptions);
 
   const where: Prisma.EventWhereInput = { status: "ACTIVE" };
-  if (params.category) where.category = { equals: params.category, mode: "insensitive" };
+  if (params.category) where.category = params.category;
   if (params.from || params.to) {
     where.dateTime = {};
     if (params.from) (where.dateTime as { gte?: Date }).gte = new Date(params.from);
@@ -39,24 +40,14 @@ export default async function EventsPage({
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Eventos</h1>
-        {session?.user?.role && ["ORGANIZER", "ADMIN"].includes(session.user.role) && (
-          <Link
-            href="/events/new"
-            className="bg-underground-accent text-white px-4 py-2 rounded font-medium hover:bg-purple-600"
-          >
-            Crear evento
-          </Link>
-        )}
-      </div>
+      <EventsPageHeader showCreateButton={!!(session?.user?.role && ["ORGANIZER", "ADMIN"].includes(session.user.role))} />
 
       <Suspense fallback={<div className="rounded-lg border border-underground-border bg-underground-card p-4 h-20" />}>
         <EventFilters />
       </Suspense>
 
       {events.length === 0 ? (
-        <p className="text-underground-muted py-8 text-center">No hay eventos con estos filtros.</p>
+        <EventsPageEmpty messageKey="events.noEvents" />
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (

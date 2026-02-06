@@ -2,9 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Dark theme (default) */
 :root {
-  --background: #0a0a0b;
-  --foreground: #fafafa;
+  --background: #131a26;
+  --foreground: #f1f5f9;
+  --underground-bg: #131a26;
+  --underground-card: #1e2738;
+  --underground-border: #2d3748;
+  --underground-muted: #94a3b8;
+  --underground-accent: #4a80ff;
+  --underground-danger: #ef4444;
+  --underground-fg: #f1f5f9;
+}
+
+/* Light theme */
+:root.light {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --underground-bg: #f8fafc;
+  --underground-card: #f1f5f9;
+  --underground-border: #e2e8f0;
+  --underground-muted: #64748b;
+  --underground-accent: #2563eb;
+  --underground-danger: #dc2626;
+  --underground-fg: #0f172a;
 }
 
 body {

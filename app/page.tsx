@@ -4,8 +4,10 @@ import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { EventCard } from "@/components/EventCard";
+import { CreateEventLink } from "@/components/CreateEventLink";
 import { EventFilters } from "@/components/EventFilters";
+import { FeaturedHero } from "@/components/FeaturedHero";
+import { UpcomingEvents } from "@/components/UpcomingEvents";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +22,7 @@ export default async function HomePage({
   const session = await getServerSession(authOptions);
 
   const where: Prisma.EventWhereInput = { status: "ACTIVE" };
-  if (params.category) where.category = { equals: params.category, mode: "insensitive" };
+  if (params.category) where.category = params.category;
   if (params.from || params.to) {
     where.dateTime = {};
     if (params.from) (where.dateTime as { gte?: Date }).gte = new Date(params.from);
@@ -37,40 +39,31 @@ export default async function HomePage({
     orderBy: { dateTime: "asc" },
   });
 
-  return (
-    <div className="space-y-8">
-      <section className="text-center py-8">
-        <h1 className="text-4xl font-bold tracking-tight text-white mb-2">
-          Underground
-        </h1>
-        <p className="text-underground-muted text-lg">
-          Tu portal de eventos alternativos, culturales e independientes
-        </p>
-      </section>
+  const featuredEvent = events[0] ?? null;
+  let isFavoriteFeatured = false;
+  if (session?.user?.id && featuredEvent) {
+    const fav = await prisma.favorite.findUnique({
+      where: { userId_eventId: { userId: session.user.id, eventId: featuredEvent.id } },
+    });
+    isFavoriteFeatured = !!fav;
+  }
 
-      <Suspense fallback={<div className="rounded-lg border border-underground-border bg-underground-card p-4 h-20" />}>
+  return (
+    <div className="space-y-8 md:space-y-10">
+      <FeaturedHero
+        event={featuredEvent ? { id: featuredEvent.id, title: featuredEvent.title, description: featuredEvent.description, location: featuredEvent.location, image: featuredEvent.image } : null}
+        isFavorite={isFavoriteFeatured}
+      />
+
+      <Suspense fallback={<div className="h-24" />}>
         <EventFilters />
       </Suspense>
 
-      <section>
-        <h2 className="text-xl font-semibold mb-4 text-white">Próximos eventos</h2>
-        {events.length === 0 ? (
-          <p className="text-underground-muted py-8 text-center">
-            No hay eventos publicados aún.
-            {session?.user?.role && ["ORGANIZER", "ADMIN"].includes(session.user.role) && (
-              <> <Link href="/events/new" className="text-underground-accent hover:underline">Crear uno</Link></>
-            )}
-          </p>
-        ) : (
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
-              <li key={event.id}>
-                <EventCard event={event} showOrganizer />
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      <UpcomingEvents events={events} />
+
+      {events.length === 0 && session?.user?.role && ["ORGANIZER", "ADMIN"].includes(session.user.role) && (
+        <CreateEventLink />
+      )}
     </div>
   );
 }

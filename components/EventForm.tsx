@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "@/lib/i18n/context";
 
 const CATEGORIES = ["música", "arte", "cultura", "teatro", "cine", "literatura", "festival", "otro"];
 
@@ -12,6 +13,7 @@ type Initial = {
   dateTime: string;
   location: string;
   image: string;
+  price: string;
   status?: string;
 };
 
@@ -23,6 +25,7 @@ export function EventForm({
   initial?: Initial;
 }) {
   const router = useRouter();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState<Initial>(
@@ -33,6 +36,7 @@ export function EventForm({
       dateTime: "",
       location: "",
       image: "",
+      price: "",
       status: "ACTIVE",
     }
   );
@@ -56,7 +60,7 @@ export function EventForm({
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(data.error?.title?.[0] ?? data.error ?? "Error al guardar");
+        setError(data.error?.title?.[0] ?? data.error ?? t("form.saveError"));
         return;
       }
       router.push(eventId ? `/events/${eventId}` : "/events");
@@ -74,84 +78,94 @@ export function EventForm({
         </p>
       )}
       <div>
-        <label htmlFor="title" className="block text-sm text-zinc-400 mb-1">Título</label>
+        <label htmlFor="title" className="block text-sm text-underground-muted mb-1">{t("form.title")}</label>
         <input
           id="title"
           value={form.title}
           onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
           required
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-underground-accent"
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
         />
       </div>
       <div>
-        <label htmlFor="description" className="block text-sm text-zinc-400 mb-1">Descripción</label>
+        <label htmlFor="description" className="block text-sm text-underground-muted mb-1">{t("form.description")}</label>
         <textarea
           id="description"
           value={form.description}
           onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
           required
           rows={4}
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-underground-accent"
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
         />
       </div>
       <div>
-        <label htmlFor="category" className="block text-sm text-zinc-400 mb-1">Categoría</label>
+        <label htmlFor="category" className="block text-sm text-underground-muted mb-1">{t("form.category")}</label>
         <select
           id="category"
           value={form.category}
           onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
           required
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-underground-accent"
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
         >
-          <option value="">Seleccionar</option>
+          <option value="">{t("form.selectCategory")}</option>
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
       </div>
       <div>
-        <label htmlFor="dateTime" className="block text-sm text-zinc-400 mb-1">Fecha y hora</label>
+        <label htmlFor="dateTime" className="block text-sm text-underground-muted mb-1">{t("form.dateTime")}</label>
         <input
           id="dateTime"
           type="datetime-local"
           value={form.dateTime}
           onChange={(e) => setForm((f) => ({ ...f, dateTime: e.target.value }))}
           required
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-underground-accent"
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
         />
       </div>
       <div>
-        <label htmlFor="location" className="block text-sm text-zinc-400 mb-1">Ubicación</label>
+        <label htmlFor="location" className="block text-sm text-underground-muted mb-1">{t("form.location")}</label>
         <input
           id="location"
           value={form.location}
           onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
           required
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-underground-accent"
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
         />
       </div>
       <div>
-        <label htmlFor="image" className="block text-sm text-zinc-400 mb-1">URL de imagen (opcional)</label>
+        <label htmlFor="image" className="block text-sm text-underground-muted mb-1">{t("form.imageUrl")}</label>
         <input
           id="image"
           type="url"
           value={form.image}
           onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
-          placeholder="https://..."
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-underground-accent"
+          placeholder={t("form.imagePlaceholder")}
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
+        />
+      </div>
+      <div>
+        <label htmlFor="price" className="block text-sm text-underground-muted mb-1">{t("form.price")}</label>
+        <input
+          id="price"
+          value={form.price}
+          onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+          placeholder={t("form.pricePlaceholder")}
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
         />
       </div>
       {eventId && initial?.status && (
         <div>
-          <label htmlFor="status" className="block text-sm text-zinc-400 mb-1">Estado</label>
+          <label htmlFor="status" className="block text-sm text-underground-muted mb-1">{t("form.status")}</label>
           <select
             id="status"
             value={form.status ?? "ACTIVE"}
             onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
-            className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-underground-accent"
+            className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
           >
-            <option value="ACTIVE">Activo</option>
-            <option value="CANCELLED">Cancelado</option>
+            <option value="ACTIVE">{t("form.statusActive")}</option>
+            <option value="CANCELLED">{t("form.statusCancelled")}</option>
           </select>
         </div>
       )}
@@ -159,16 +173,16 @@ export function EventForm({
         <button
           type="submit"
           disabled={loading}
-          className="bg-underground-accent text-white px-4 py-2 rounded font-medium hover:bg-purple-600 disabled:opacity-50"
+          className="bg-underground-accent text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
         >
-          {loading ? "Guardando…" : eventId ? "Guardar cambios" : "Crear evento"}
+          {loading ? t("form.saving") : eventId ? t("form.save") : t("form.create")}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
-          className="border border-underground-border text-zinc-400 px-4 py-2 rounded font-medium hover:text-white"
+          className="border border-underground-border text-underground-muted px-4 py-2 rounded font-medium hover:text-underground-fg"
         >
-          Cancelar
+          {t("form.cancel")}
         </button>
       </div>
     </form>
