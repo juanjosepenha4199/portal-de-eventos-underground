@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useTranslation } from "@/lib/i18n/context";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { DeleteEventButton } from "@/components/DeleteEventButton";
+import { BuyTicketButton } from "@/components/BuyTicketButton";
+import { AddToCartButton } from "@/components/AddToCartButton";
 
 type EventDetailContentProps = {
   event: {
@@ -15,20 +17,34 @@ type EventDetailContentProps = {
     location: string;
     image: string | null;
     price: string | null;
+    priceCents?: number | null;
     status: string;
     organizer?: { name: string | null } | null;
   };
   dateStr: string;
   canEdit: boolean;
   isFavorite: boolean;
+  hasTicket?: boolean;
+  isPaidEvent?: boolean;
+  isLoggedIn?: boolean;
+  purchased?: boolean;
 };
 
-export function EventDetailContent({ event, dateStr, canEdit, isFavorite }: EventDetailContentProps) {
+export function EventDetailContent({
+  event,
+  dateStr,
+  canEdit,
+  isFavorite,
+  hasTicket = false,
+  isPaidEvent = false,
+  isLoggedIn = false,
+  purchased = false,
+}: EventDetailContentProps) {
   const { t } = useTranslation();
 
   return (
     <article className="max-w-3xl mx-auto">
-      <div className="rounded-lg border border-underground-border bg-underground-card overflow-hidden">
+      <div className="rounded-lg border border-underground-border bg-underground-card overflow-hidden shadow-neon-sm">
         {event.image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -77,11 +93,33 @@ export function EventDetailContent({ event, dateStr, canEdit, isFavorite }: Even
               </div>
             )}
           </dl>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <BuyTicketButton
+              eventId={event.id}
+              hasTicket={!!hasTicket}
+              isPaidEvent={isPaidEvent}
+              isLoggedIn={isLoggedIn}
+            />
+            {isPaidEvent && !hasTicket && (
+              <AddToCartButton
+                eventId={event.id}
+                title={event.title}
+                price={event.price ?? ""}
+                priceCents={event.priceCents ?? 0}
+                image={event.image}
+              />
+            )}
+          </div>
+          {purchased && (
+            <p role="status" className="mt-3 text-neon-cyan text-sm font-medium">
+              {t("ticket.purchasedSuccess")}
+            </p>
+          )}
           {canEdit && (
             <div className="mt-6 flex gap-2">
               <Link
                 href={`/events/${event.id}/edit`}
-                className="bg-underground-accent text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90"
+                className="bg-neon-purple text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-neon-magenta hover:shadow-neon-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-cyan focus-visible:outline-offset-2"
               >
                 {t("event.edit")}
               </Link>

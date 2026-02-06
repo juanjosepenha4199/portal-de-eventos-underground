@@ -14,6 +14,7 @@ type Initial = {
   location: string;
   image: string;
   price: string;
+  priceCents?: number | null;
   status?: string;
 };
 
@@ -37,6 +38,7 @@ export function EventForm({
       location: "",
       image: "",
       price: "",
+      priceCents: null,
       status: "ACTIVE",
     }
   );
@@ -52,6 +54,7 @@ export function EventForm({
         ...form,
         dateTime: new Date(form.dateTime).toISOString(),
         image: form.image.trim() || undefined,
+        priceCents: form.priceCents != null ? form.priceCents : null,
       };
       const res = await fetch(url, {
         method,
@@ -71,9 +74,10 @@ export function EventForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-underground-border bg-underground-card p-6">
+    <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-underground-border bg-underground-card p-6 shadow-neon-sm">
       {error && (
-        <p className="text-underground-danger text-sm bg-red-500/10 border border-red-500/30 rounded px-3 py-2">
+        <p role="alert" className="text-underground-danger text-sm bg-underground-danger/10 border border-underground-danger/40 rounded-lg px-3 py-2 flex items-center gap-2" aria-live="assertive">
+          <span aria-hidden>⚠</span>
           {error}
         </p>
       )}
@@ -84,7 +88,7 @@ export function EventForm({
           value={form.title}
           onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
           required
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-neon-purple focus:border-neon-purple/50"
         />
       </div>
       <div>
@@ -95,7 +99,7 @@ export function EventForm({
           onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
           required
           rows={4}
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-neon-purple focus:border-neon-purple/50"
         />
       </div>
       <div>
@@ -105,7 +109,7 @@ export function EventForm({
           value={form.category}
           onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
           required
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-neon-purple focus:border-neon-purple/50"
         >
           <option value="">{t("form.selectCategory")}</option>
           {CATEGORIES.map((c) => (
@@ -121,7 +125,7 @@ export function EventForm({
           value={form.dateTime}
           onChange={(e) => setForm((f) => ({ ...f, dateTime: e.target.value }))}
           required
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-neon-purple focus:border-neon-purple/50"
         />
       </div>
       <div>
@@ -131,7 +135,7 @@ export function EventForm({
           value={form.location}
           onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
           required
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-neon-purple focus:border-neon-purple/50"
         />
       </div>
       <div>
@@ -142,18 +146,32 @@ export function EventForm({
           value={form.image}
           onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
           placeholder={t("form.imagePlaceholder")}
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
+          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-neon-purple focus:border-neon-purple/50"
         />
       </div>
-      <div>
-        <label htmlFor="price" className="block text-sm text-underground-muted mb-1">{t("form.price")}</label>
-        <input
-          id="price"
-          value={form.price}
-          onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
-          placeholder={t("form.pricePlaceholder")}
-          className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
-        />
+      <div className="grid gap-2 sm:grid-cols-2">
+        <div>
+          <label htmlFor="price" className="block text-sm text-underground-muted mb-1">{t("form.price")}</label>
+          <input
+            id="price"
+            value={form.price}
+            onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+            placeholder={t("form.pricePlaceholder")}
+            className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-neon-purple focus:border-neon-purple/50"
+          />
+        </div>
+        <div>
+          <label htmlFor="priceCents" className="block text-sm text-underground-muted mb-1">{t("form.priceCents")}</label>
+          <input
+            id="priceCents"
+            type="number"
+            min={0}
+            value={form.priceCents ?? ""}
+            onChange={(e) => setForm((f) => ({ ...f, priceCents: e.target.value === "" ? null : Number(e.target.value) }))}
+            placeholder="0"
+            className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-neon-purple focus:border-neon-purple/50"
+          />
+        </div>
       </div>
       {eventId && initial?.status && (
         <div>
@@ -162,7 +180,7 @@ export function EventForm({
             id="status"
             value={form.status ?? "ACTIVE"}
             onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
-            className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
+            className="w-full bg-underground-bg border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-neon-purple focus:border-neon-purple/50"
           >
             <option value="ACTIVE">{t("form.statusActive")}</option>
             <option value="CANCELLED">{t("form.statusCancelled")}</option>
@@ -173,14 +191,15 @@ export function EventForm({
         <button
           type="submit"
           disabled={loading}
-          className="bg-underground-accent text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
+          aria-busy={loading}
+          className="bg-neon-purple text-white px-4 py-2 rounded-lg font-medium hover:bg-neon-magenta hover:shadow-neon-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-cyan focus-visible:outline-offset-2 disabled:opacity-50"
         >
           {loading ? t("form.saving") : eventId ? t("form.save") : t("form.create")}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
-          className="border border-underground-border text-underground-muted px-4 py-2 rounded font-medium hover:text-underground-fg"
+          className="border border-underground-border text-underground-muted px-4 py-2 rounded-lg font-medium hover:text-underground-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-purple focus-visible:outline-offset-2"
         >
           {t("form.cancel")}
         </button>

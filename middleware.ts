@@ -8,7 +8,7 @@ export default withAuth({
       if (path.startsWith("/events/new") || path.startsWith("/events/my")) {
         return !!token && (token.role === "ORGANIZER" || token.role === "ADMIN");
       }
-      if (path.startsWith("/events/favorites")) return !!token;
+      if (path.startsWith("/events/favorites") || path.startsWith("/events/tickets")) return !!token;
       if (path.match(/^\/events\/[^/]+\/edit$/)) return !!token;
       return true;
     },
@@ -17,5 +17,5 @@ export default withAuth({
 });
 
 export const config = {
-  matcher: ["/admin/:path*", "/events/new", "/events/my", "/events/favorites", "/events/:id/edit"],
+  matcher: ["/admin/:path*", "/events/new", "/events/my", "/events/favorites", "/events/tickets", "/events/:id/edit"],
 };

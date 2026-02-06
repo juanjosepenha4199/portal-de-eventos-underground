@@ -20,6 +20,19 @@ export default async function MyEventsPage() {
     orderBy: { dateTime: "desc" },
   });
 
+  const eventIds = events.map((e) => e.id);
+  const attendanceCounts =
+    eventIds.length > 0
+      ? await prisma.ticket.groupBy({
+          by: ["eventId"],
+          where: { eventId: { in: eventIds }, status: "PAID" },
+          _count: true,
+        })
+      : [];
+  const attendanceByEventId = Object.fromEntries(
+    attendanceCounts.map((c) => [c.eventId, c._count])
+  );
+
   return (
     <div className="space-y-6">
       <MyEventsPageHeader isAdmin={role === "ADMIN"} />
@@ -29,7 +42,11 @@ export default async function MyEventsPage() {
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
             <li key={event.id}>
-              <EventCard event={event} showOrganizer={role === "ADMIN"} />
+              <EventCard
+                event={event}
+                showOrganizer={role === "ADMIN"}
+                attendanceCount={attendanceByEventId[event.id] ?? 0}
+              />
             </li>
           ))}
         </ul>

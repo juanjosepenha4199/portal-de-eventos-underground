@@ -8,6 +8,7 @@ export const eventSchema = z.object({
   location: z.string().min(1, "Ubicación requerida"),
   image: z.string().url().optional().or(z.literal("")),
   price: z.string().max(32).optional().or(z.literal("")),
+  priceCents: z.number().int().min(0).optional().nullable(),
   status: z.enum(["ACTIVE", "CANCELLED"]).optional().default("ACTIVE"),
 });
 

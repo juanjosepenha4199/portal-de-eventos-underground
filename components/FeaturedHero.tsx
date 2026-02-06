@@ -46,10 +46,10 @@ export function FeaturedHero({
         )}
 
         <div className="relative z-10">
-          <span className="inline-block bg-underground-accent text-white text-xs font-semibold px-3 py-1 rounded mb-3 uppercase tracking-wide">
+          <span className="inline-block bg-neon-purple/90 text-white text-xs font-semibold px-3 py-1 rounded mb-3 uppercase tracking-wide shadow-neon-sm">
             {t("hero.featuredTonight")}
           </span>
-          <h2 className="text-2xl md:text-4xl font-bold text-white tracking-tight mb-2">
+          <h2 className="text-2xl md:text-4xl font-bold text-white tracking-tight mb-2 drop-shadow-lg">
             {event.title}
           </h2>
           <p className="text-white/90 text-sm md:text-base max-w-2xl mb-4">
@@ -58,7 +58,7 @@ export function FeaturedHero({
           <div className="flex flex-wrap gap-3">
             <Link
               href={`/events/${event.id}`}
-              className="inline-flex items-center bg-underground-accent text-white font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition"
+              className="inline-flex items-center bg-neon-purple text-white font-medium px-5 py-2.5 rounded-lg hover:bg-neon-magenta hover:shadow-neon transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-cyan focus-visible:outline-offset-2"
             >
               {t("hero.getTickets")}
             </Link>

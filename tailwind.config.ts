@@ -18,9 +18,19 @@ const config: Config = {
           danger: "var(--underground-danger)",
           fg: "var(--underground-fg)",
         },
+        neon: {
+          purple: "var(--neon-purple)",
+          magenta: "var(--neon-magenta)",
+          cyan: "var(--neon-cyan)",
+        },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+      },
+      boxShadow: {
+        "neon-sm": "0 0 15px -3px var(--glow-purple)",
+        "neon": "0 0 25px -5px var(--glow-purple)",
+        "neon-cyan": "0 0 20px -5px var(--glow-cyan)",
       },
     },
   },

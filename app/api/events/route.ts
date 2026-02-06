@@ -55,6 +55,7 @@ export async function POST(request: Request) {
       dateTime: new Date(parsed.data.dateTime),
       image: parsed.data.image || null,
       price: parsed.data.price?.trim() || null,
+      priceCents: parsed.data.priceCents ?? null,
       organizerId: session.user.id,
     };
 

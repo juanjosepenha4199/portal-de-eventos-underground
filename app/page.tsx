@@ -18,34 +18,59 @@ export default async function HomePage({
 }: {
   searchParams: SearchParams;
 }) {
-  const params = searchParams ?? {};
-  const session = await getServerSession(authOptions);
+  const params = (typeof searchParams === "object" && searchParams !== null ? searchParams : {}) as SearchParams;
+  let session: Awaited<ReturnType<typeof getServerSession>> = null;
+  let events: Awaited<ReturnType<typeof prisma.event.findMany>> = [];
+  let isFavoriteFeatured = false;
 
-  const where: Prisma.EventWhereInput = { status: "ACTIVE" };
-  if (params.category) where.category = params.category;
-  if (params.from || params.to) {
-    where.dateTime = {};
-    if (params.from) (where.dateTime as { gte?: Date }).gte = new Date(params.from);
-    if (params.to) {
-      const toDate = new Date(params.to);
-      toDate.setHours(23, 59, 59, 999);
-      (where.dateTime as { lte?: Date }).lte = toDate;
-    }
+  try {
+    session = await getServerSession(authOptions);
+  } catch (e) {
+    console.error("HomePage getServerSession:", e);
   }
 
-  const events = await prisma.event.findMany({
-    where,
-    include: { organizer: { select: { name: true } } },
-    orderBy: { dateTime: "asc" },
-  });
+  try {
+    const where: Prisma.EventWhereInput = { status: "ACTIVE" };
+    if (params.category) where.category = params.category;
+    if (params.from || params.to) {
+      where.dateTime = {};
+      if (params.from) (where.dateTime as { gte?: Date }).gte = new Date(params.from);
+      if (params.to) {
+        const toDate = new Date(params.to);
+        toDate.setHours(23, 59, 59, 999);
+        (where.dateTime as { lte?: Date }).lte = toDate;
+      }
+    }
+
+    events = await prisma.event.findMany({
+      where,
+      include: { organizer: { select: { name: true } } },
+      orderBy: { dateTime: "asc" },
+    });
+  } catch (e) {
+    console.error("HomePage prisma.event.findMany:", e);
+    return (
+      <div className="rounded-lg border border-underground-danger/40 bg-underground-danger/10 p-6 text-center space-y-3">
+        <p className="text-underground-danger font-medium">Error al cargar los eventos</p>
+        <p className="text-underground-muted text-sm">
+          Comprueba que la base de datos esté disponible y que hayas ejecutado <code className="bg-underground-card px-1 rounded">npx prisma generate</code>.
+          Cierra otras ventanas que usen la base de datos (Prisma Studio, otra terminal con <code className="bg-underground-card px-1 rounded">npm run dev</code>).
+        </p>
+        <Link href="/" className="inline-block text-neon-cyan hover:underline">Recargar</Link>
+      </div>
+    );
+  }
 
   const featuredEvent = events[0] ?? null;
-  let isFavoriteFeatured = false;
   if (session?.user?.id && featuredEvent) {
-    const fav = await prisma.favorite.findUnique({
-      where: { userId_eventId: { userId: session.user.id, eventId: featuredEvent.id } },
-    });
-    isFavoriteFeatured = !!fav;
+    try {
+      const fav = await prisma.favorite.findUnique({
+        where: { userId_eventId: { userId: session.user.id, eventId: featuredEvent.id } },
+      });
+      isFavoriteFeatured = !!fav;
+    } catch {
+      // ignore
+    }
   }
 
   return (

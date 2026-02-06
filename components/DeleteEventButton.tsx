@@ -19,7 +19,7 @@ export function DeleteEventButton({ eventId }: { eventId: string }) {
     <button
       type="button"
       onClick={handleDelete}
-      className="bg-underground-danger/20 text-underground-danger border border-underground-danger/50 px-4 py-2 rounded text-sm font-medium hover:bg-underground-danger/30"
+      className="bg-underground-danger/20 text-underground-danger border border-underground-danger/50 px-4 py-2 rounded-lg text-sm font-medium hover:bg-underground-danger/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-underground-danger focus-visible:outline-offset-2"
     >
       {t("event.delete")}
     </button>

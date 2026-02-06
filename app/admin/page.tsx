@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { AdminEvents } from "@/components/AdminEvents";
 import { AdminSectionTitle } from "@/components/AdminSectionTitle";
+import { AdminSellerApplications } from "@/components/AdminSellerApplications";
 import { AdminUsers } from "@/components/AdminUsers";
 import { PageTitle } from "@/components/PageTitle";
 
@@ -26,6 +27,11 @@ export default async function AdminPage() {
   return (
     <div className="space-y-10">
       <PageTitle translationKey="admin.panelTitle" />
+
+      <section>
+        <AdminSectionTitle translationKey="admin.sellerApplications" />
+        <AdminSellerApplications />
+      </section>
 
       <section>
         <AdminSectionTitle translationKey="admin.users" />

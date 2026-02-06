@@ -33,6 +33,7 @@ export default async function EditEventPage({
     location: event.location,
     image: event.image ?? "",
     price: event.price ?? "",
+    priceCents: event.priceCents ?? null,
     status: event.status,
   };
 

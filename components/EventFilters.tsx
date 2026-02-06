@@ -46,9 +46,9 @@ export function EventFilters() {
             key={value || "all"}
             type="button"
             onClick={() => selectCategory(value)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition border ${
+            className={`px-4 py-2 rounded-full text-sm font-medium transition border focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-purple focus-visible:outline-offset-2 ${
               category === value
-                ? "bg-underground-accent/20 border-underground-accent text-underground-fg"
+                ? "bg-neon-purple/20 border-neon-purple text-underground-fg shadow-neon-sm"
                 : "bg-underground-card border-underground-border text-underground-muted hover:text-underground-fg hover:border-underground-muted"
             }`}
           >

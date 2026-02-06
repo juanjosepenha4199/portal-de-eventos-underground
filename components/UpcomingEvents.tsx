@@ -38,20 +38,22 @@ export function UpcomingEvents({ events }: { events: EventWithOrganizer[] }) {
     <section>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
         <h2 className="text-lg font-semibold text-underground-fg">{t("upcoming.title")}</h2>
-        <div className="flex rounded-lg overflow-hidden border border-underground-border">
+        <div className="flex rounded-lg overflow-hidden border border-underground-border" role="group" aria-label={t("upcoming.viewMode")}>
           <button
             type="button"
             onClick={() => setViewMode("grid")}
-            className={`p-2 ${viewMode === "grid" ? "bg-underground-accent/30 text-underground-fg" : "bg-underground-card text-underground-muted hover:text-underground-fg"}`}
+            className={`p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-purple focus-visible:outline-offset-0 ${viewMode === "grid" ? "bg-neon-purple/30 text-underground-fg" : "bg-underground-card text-underground-muted hover:text-underground-fg"}`}
             aria-label={t("upcoming.viewGrid")}
+            aria-pressed={viewMode === "grid"}
           >
             <GridIcon className="w-5 h-5" />
           </button>
           <button
             type="button"
             onClick={() => setViewMode("list")}
-            className={`p-2 border-l border-underground-border ${viewMode === "list" ? "bg-underground-accent/30 text-underground-fg" : "bg-underground-card text-underground-muted hover:text-underground-fg"}`}
+            className={`p-2 border-l border-underground-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-purple focus-visible:outline-offset-0 ${viewMode === "list" ? "bg-neon-purple/30 text-underground-fg" : "bg-underground-card text-underground-muted hover:text-underground-fg"}`}
             aria-label={t("upcoming.viewList")}
+            aria-pressed={viewMode === "list"}
           >
             <ListIcon className="w-5 h-5" />
           </button>
@@ -85,7 +87,7 @@ export function UpcomingEvents({ events }: { events: EventWithOrganizer[] }) {
           <button
             type="button"
             onClick={() => setVisibleCount((c) => Math.min(c + LOAD_MORE_COUNT, events.length))}
-            className="px-6 py-3 rounded-lg border border-underground-border text-underground-fg text-sm font-medium hover:bg-underground-card hover:border-underground-muted transition"
+            className="px-6 py-3 rounded-lg border border-underground-border text-underground-fg text-sm font-medium hover:bg-neon-purple/10 hover:border-neon-purple/50 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-purple focus-visible:outline-offset-2"
           >
             {t("upcoming.loadMore")}
           </button>

@@ -7,11 +7,11 @@ export function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="border-t border-underground-border bg-underground-card mt-auto">
+    <footer className="border-t border-underground-border bg-underground-card/95 mt-auto" role="contentinfo">
       <div className="container mx-auto px-4 py-10 md:py-12">
         <div className="grid gap-8 md:grid-cols-3 md:gap-12">
           <div className="md:col-span-1">
-            <Link href="/" className="font-bold text-xl text-underground-fg uppercase tracking-tight hover:text-underground-accent transition">
+            <Link href="/" className="font-bold text-xl text-underground-fg uppercase tracking-tight hover:text-neon-purple transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-purple focus-visible:outline-offset-2 rounded">
               Underground
             </Link>
             <p className="text-underground-muted text-sm mt-3 max-w-xs">

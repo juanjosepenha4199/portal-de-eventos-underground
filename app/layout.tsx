@@ -23,11 +23,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased min-h-screen bg-underground-bg text-underground-fg`}>
+      <body className={`${inter.variable} font-sans antialiased min-h-screen text-underground-fg flex flex-col`}>
         <ThemeScript />
         <Providers>
+          <a href="#main-content" className="skip-link">
+            Saltar al contenido
+          </a>
           <Header />
-          <main className="container mx-auto px-4 py-6 md:py-8 min-h-[calc(100vh-3.5rem)] flex flex-col">{children}</main>
+          <main id="main-content" className="container mx-auto px-4 py-6 md:py-8 flex-1 flex flex-col min-h-0" role="main" style={{ backgroundColor: "var(--underground-bg)" }}>{children}</main>
           <Footer />
         </Providers>
       </body>

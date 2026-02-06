@@ -31,12 +31,20 @@ export function LoginForm() {
     router.refresh();
   }
 
+  const sellerPending = searchParams.get("seller") === "pending";
+
   return (
     <div className="max-w-sm mx-auto py-12">
       <h1 className="text-2xl font-bold text-underground-fg mb-6">{t("auth.login")}</h1>
+      {sellerPending && (
+        <p className="mb-4 text-sm text-neon-cyan bg-neon-cyan/10 border border-neon-cyan/40 rounded-lg px-3 py-2">
+          {t("auth.sellerRequiresApproval")}
+        </p>
+      )}
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <p className="text-underground-danger text-sm bg-red-500/10 border border-red-500/30 rounded px-3 py-2">
+          <p role="alert" className="text-underground-danger text-sm bg-underground-danger/10 border border-underground-danger/40 rounded-lg px-3 py-2 flex items-center gap-2" aria-live="assertive">
+            <span aria-hidden>⚠</span>
             {error}
           </p>
         )}
@@ -48,7 +56,7 @@ export function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full bg-underground-card border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
+            className="w-full bg-underground-card border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-neon-purple focus:border-neon-purple/50"
           />
         </div>
         <div>
@@ -59,12 +67,12 @@ export function LoginForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full bg-underground-card border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-underground-accent"
+            className="w-full bg-underground-card border border-underground-border rounded px-3 py-2 text-underground-fg focus:outline-none focus:ring-2 focus:ring-neon-purple focus:border-neon-purple/50"
           />
         </div>
         <button
           type="submit"
-          className="w-full bg-underground-accent text-white py-2 rounded-lg font-medium hover:opacity-90"
+          className="w-full bg-neon-purple text-white py-2 rounded-lg font-medium hover:bg-neon-magenta hover:shadow-neon-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-cyan focus-visible:outline-offset-2 disabled:opacity-60"
         >
           {t("auth.login")}
         </button>

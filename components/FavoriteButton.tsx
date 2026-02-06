@@ -48,8 +48,8 @@ export function FavoriteButton({
 
   const baseClass = "rounded-lg border transition inline-flex items-center justify-center";
   const checkedClass = checked
-    ? "bg-underground-accent/20 border-underground-accent text-underground-accent"
-    : "border-underground-border bg-underground-card text-underground-muted hover:border-underground-muted hover:text-underground-fg";
+    ? "bg-neon-purple/20 border-neon-purple text-neon-purple"
+    : "border-underground-border bg-underground-card text-underground-muted hover:border-neon-purple/50 hover:text-underground-fg";
 
   if (variant === "icon") {
     return (
@@ -57,10 +57,11 @@ export function FavoriteButton({
         type="button"
         onClick={toggle}
         disabled={loading}
-        className={`${baseClass} ${checkedClass} p-2.5`}
-        aria-label={checked ? t("favorite.remove") : t("favorite.add")}
+        aria-busy={loading}
+        aria-label={loading ? (checked ? t("favorite.removing") : t("favorite.adding")) : (checked ? t("favorite.remove") : t("favorite.add"))}
+        className={`${baseClass} ${checkedClass} p-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-purple focus-visible:outline-offset-2 disabled:opacity-70`}
       >
-        <BookmarkIcon filled={checked} className="w-5 h-5" />
+        {loading ? <span className="inline-block w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden /> : <BookmarkIcon filled={checked} className="w-5 h-5" />}
       </button>
     );
   }
@@ -70,9 +71,10 @@ export function FavoriteButton({
       type="button"
       onClick={toggle}
       disabled={loading}
-      className={`${baseClass} ${checkedClass} px-3 py-1.5 text-sm font-medium`}
+      aria-busy={loading}
+      className={`${baseClass} ${checkedClass} px-3 py-1.5 text-sm font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-purple focus-visible:outline-offset-2 disabled:opacity-70`}
     >
-      {checked ? t("favorite.saved") : t("favorite.save")}
+      {loading ? t("favorite.saving") : (checked ? t("favorite.saved") : t("favorite.save"))}
     </button>
   );
 }

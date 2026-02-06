@@ -48,6 +48,7 @@ export async function PATCH(
     if (data.dateTime) data.dateTime = new Date(data.dateTime as string);
     if (data.image === "") data.image = null;
     if (data.price === "") data.price = null;
+    if (data.priceCents === "" || data.priceCents === undefined) data.priceCents = null;
 
     const updated = await prisma.event.update({
       where: { id },

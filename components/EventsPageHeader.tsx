@@ -11,7 +11,7 @@ export function EventsPageHeader({ showCreateButton = false }: { showCreateButto
       {showCreateButton && (
         <Link
           href="/events/new"
-          className="bg-underground-accent text-white px-4 py-2 rounded-lg font-medium hover:opacity-90"
+          className="bg-neon-purple text-white px-4 py-2 rounded-lg font-medium hover:bg-neon-magenta hover:shadow-neon-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon-cyan focus-visible:outline-offset-2"
         >
           {t("events.createEvent")}
         </Link>
