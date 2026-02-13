@@ -4,6 +4,42 @@
 
 - Docker y Docker Compose instalados.
 
+## Publicación automática (GitHub Actions)
+
+El workflow `.github/workflows/publish.yml` construye y publica la imagen en **GitHub Packages** (ghcr.io) cuando haces push a `master` o abres un PR hacia `master`.
+
+### Qué necesitas para que las imágenes aparezcan en Paquetes
+
+1. **Rama por defecto**  
+   En GitHub el repo debe tener como rama por defecto la que usa el workflow (`master`). Si usas `main`, cambia en el workflow `branches: [master]` por `branches: [main]` y la condición de `latest` a `refs/heads/main`.
+
+2. **Disparar el workflow**  
+   Haz **push a `master`** (o merge de un PR a `master`). La primera vez que termine bien, se creará el paquete en tu cuenta.
+
+3. **Dónde ver el paquete**  
+   - En GitHub: tu perfil → **Packages**, o en el repo en la columna derecha en “Packages”.  
+   - La imagen queda en: **`ghcr.io/juanjosepenha4199/portal-de-eventos-underground`** (tags: `latest`, `master`).
+
+4. **Vincular paquete al repo (opcional)**  
+   Entra al paquete → **Package settings** → **Manage repository access** / **Link repository** y asocia `juanjosepenha4199/portal-de-eventos-underground` para que se vea desde el repo.
+
+5. **Repositorio privado**  
+   Si el repo es privado, el paquete también. Para hacer `docker pull` desde otra máquina necesitas:
+   ```bash
+   echo $GITHUB_TOKEN | docker login ghcr.io -u juanjosepenha4199 --password-stdin
+   ```
+   (Token con permiso `read:packages`.)
+
+### Usar la imagen publicada sin construir en local
+
+```yaml
+# En docker-compose.yml:
+services:
+  app:
+    image: ghcr.io/juanjosepenha4199/portal-de-eventos-underground:latest
+    # ... resto igual (ports, env, volumes)
+```
+
 ## Variables de entorno
 
 Crea un archivo `.env` en la raíz del proyecto (junto a `docker-compose.yml`) con al menos:
