@@ -65,6 +65,18 @@ MVP de plataforma web para eventos underground, alternativos, culturales e indep
 
    Abre [http://localhost:3000](http://localhost:3000).
 
+## Ejecutar con Docker
+
+Construcción en varias etapas (dependencias → compilado → imagen final) y ejecución con Docker Compose:
+
+```bash
+# Crear .env con NEXTAUTH_SECRET y NEXTAUTH_URL (ver .env.example)
+docker compose build
+docker compose up -d
+```
+
+La app queda en **http://localhost:3000**. La base SQLite se persiste en un volumen. Detalles y seed en [DOCKER.md](./DOCKER.md).
+
 ## Estructura del proyecto
 
 ```

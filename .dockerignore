@@ -1,0 +1,36 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Next.js
+.next
+out
+
+# Prisma (generated client is built inside image; local DB not needed)
+*.db
+*.db-journal
+prisma/dev.db
+prisma/dev.db-journal
+
+# Env (secrets; use docker-compose env or runtime)
+.env
+.env.*
+!.env.example
+
+# Git / IDE
+.git
+.gitignore
+.cursor
+.vscode
+*.md
+!README.md
+
+# Tests / misc
+coverage
+.nyc_output
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
