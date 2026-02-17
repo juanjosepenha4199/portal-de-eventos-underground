@@ -4,9 +4,9 @@ MVP de plataforma web para eventos underground, alternativos, culturales e indep
 
 ## Stack
 
-- **Frontend:** Next.js (App Router), TypeScript, TailwindCSS
+- **Frontend:** React con Next.js (App Router), TypeScript, TailwindCSS
 - **Backend:** API Routes Next.js, Prisma ORM, SQLite (modo local)
-- **Auth:** NextAuth con credenciales (email/contraseña)
+- **Auth:** NextAuth con credenciales (email/contraseña) y **Google** (OAuth)
 - **Validación:** Zod
 
 ## Requisitos
@@ -19,10 +19,14 @@ MVP de plataforma web para eventos underground, alternativos, culturales e indep
 
 1. **Clonar e instalar dependencias**
 
+   Si acabas de clonar el repo, entra a la carpeta del proyecto (si ya abriste el proyecto en el IDE, la terminal ya está en la raíz y **no** hace falta este `cd`):
+
    ```bash
-   cd portal-de-eventos-underground
-   npm install
+   cd portal-de-eventos-underground   # solo si estás en la carpeta padre (ej. 7mo/web)
+   npm install                       # instala dependencias de frontend y backend (workspaces)
    ```
+
+   **Variables de entorno:** Copia `.env` a `frontend/` y a `backend/` (o crea un `.env` en cada uno con las mismas variables), para que tanto Next.js como los comandos de Prisma (`db:generate`, `db:push`, `db:seed`) tengan acceso.
 
 2. **Configurar variables de entorno**
 
@@ -37,6 +41,7 @@ MVP de plataforma web para eventos underground, alternativos, culturales e indep
    - `DATABASE_URL`: ruta a SQLite (ej. `file:./dev.db`)
    - `NEXTAUTH_SECRET`: secreto para sesiones (generar con `openssl rand -base64 32`)
    - `NEXTAUTH_URL`: URL de la app (en local: `http://localhost:3000`)
+   - **Google (opcional):** `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` para iniciar sesión con cuenta de Google (crear en [Google Cloud Console](https://console.cloud.google.com/apis/credentials); URI de redirección: `NEXTAUTH_URL/api/auth/callback/google`)
 
 3. **Crear base de datos y tablas**
 
@@ -65,6 +70,17 @@ MVP de plataforma web para eventos underground, alternativos, culturales e indep
 
    Abre [http://localhost:3000](http://localhost:3000).
 
+### Si en Windows PowerShell dice "la ejecución de scripts está deshabilitada"
+
+PowerShell puede bloquear `npm` porque lo ejecuta como script. Dos opciones:
+
+- **Opción A – Usar CMD:** En Cursor/VS Code abre una terminal **CMD** (menú desplegable de la terminal → "Command Prompt") y ejecuta ahí `npm install`, `npm run dev`, etc.
+- **Opción B – Permitir scripts en PowerShell:** Abre PowerShell **como administrador**, ejecuta una sola vez:
+  ```powershell
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+  ```
+  Luego cierra y vuelve a abrir la terminal del proyecto.
+
 ## Ejecutar con Docker
 
 Construcción en varias etapas (dependencias → compilado → imagen final) y ejecución con Docker Compose:
@@ -89,6 +105,12 @@ La app queda en **http://localhost:3000**. La base SQLite se persiste en un volu
 /lib            → Prisma, NextAuth, validaciones
 /prisma         → Schema y seed
 ```
+
+El proyecto está organizado en **frontend** y **backend**, cada uno con su propio `src`:
+
+- **frontend/src/** — App Next.js: `app/` (páginas y API routes), `components/`, `lib/` (i18n, theme, cart).
+- **backend/src/** — Lógica de servidor: Prisma, NextAuth, Stripe, validaciones; el frontend importa `@portal/backend`.
+- **backend/prisma/** — Schema y seed de la base de datos.
 
 ## Roles
 

@@ -2,40 +2,15 @@
   "name": "portal-de-eventos-underground",
   "version": "0.1.0",
   "private": true,
+  "workspaces": ["frontend", "backend"],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  },
-  "dependencies": {
-    "@prisma/client": "^6.0.0",
-    "bcryptjs": "^2.4.3",
-    "next": "14.2.18",
-    "next-auth": "^4.24.10",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "stripe": "^20.3.1",
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^22.0.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.18",
-    "postcss": "^8.4.49",
-    "prisma": "^6.0.0",
-    "tailwindcss": "^3.4.15",
-    "tsx": "^4.19.2",
-    "typescript": "^5.0.0"
+    "dev": "npm run dev --workspace=@portal/frontend",
+    "build": "npm run build --workspace=@portal/frontend",
+    "start": "npm run start --workspace=@portal/frontend",
+    "lint": "npm run lint --workspace=@portal/frontend",
+    "db:generate": "npm run db:generate --workspace=@portal/backend",
+    "db:push": "npm run db:push --workspace=@portal/backend",
+    "db:seed": "npm run db:seed --workspace=@portal/backend",
+    "db:studio": "npm run db:studio --workspace=@portal/backend"
   }
 }

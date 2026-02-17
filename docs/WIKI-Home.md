@@ -21,8 +21,10 @@ Sigue estos pasos **en orden**. Todos han sido verificados en entorno local.
 
 ### 1. Clonar e instalar dependencias
 
+Si acabas de clonar el repo, entra a la carpeta del proyecto. Si ya abriste el proyecto en el IDE, la terminal suele estar en la raíz y **no** hace falta el `cd`:
+
 ```bash
-cd portal-de-eventos-underground
+cd portal-de-eventos-underground   # solo si estás en la carpeta padre (ej. 7mo/web)
 npm install
 ```
 
