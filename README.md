@@ -22,8 +22,8 @@ MVP de plataforma web para eventos underground, alternativos, culturales e indep
    Si acabas de clonar el repo, entra a la carpeta del proyecto (si ya abriste el proyecto en el IDE, la terminal ya está en la raíz y **no** hace falta este `cd`):
 
    ```bash
-   cd portal-de-eventos-underground   # solo si estás en la carpeta padre (ej. 7mo/web)
-   npm install                       # instala dependencias de frontend y backend (workspaces)
+   cd portal-de-eventos-underground   # solo si estás en la carpeta padre 
+   npm install                       # instala dependencias de frontend y backend 
    ```
 
    **Variables de entorno:** Copia `.env` a `frontend/` y a `backend/` (o crea un `.env` en cada uno con las mismas variables), para que tanto Next.js como los comandos de Prisma (`db:generate`, `db:push`, `db:seed`) tengan acceso.
